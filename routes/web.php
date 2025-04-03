@@ -1,11 +1,14 @@
+routes/web.php
+
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UsersController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-// routes/web.php
-Route::get('/', [App\Http\Controllers\UsesrController::class, 'login'])->name('users.login');
-Route::get('/dashboard', [App\Http\Controllers\UsersController::class, 'dashboard'])->name('users.dashboard');
+Route::get('/login', [UsersController::class, 'login'])->name('users.login');
+Route::post('/login', [UsersController::class, 'checkuser'])->name('users.checkuser');
+Route::get('/dashboard', [UsersController::class, 'dashboard'])->name('users.dashboard');
