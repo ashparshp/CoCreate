@@ -10,9 +10,15 @@ use App\Http\Controllers\SkillController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 // Authentication routes (provided by Laravel Breeze)
 require __DIR__.'/auth.php';

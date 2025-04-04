@@ -1,3 +1,71 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    html {
+        @apply antialiased;
+    }
+    
+    body {
+        @apply font-sans text-secondary-800 bg-gray-50 dark:text-secondary-200 dark:bg-secondary-900 transition-colors duration-200;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-medium text-secondary-900 dark:text-white;
+    }
+    
+    a {
+        @apply transition-colors duration-200;
+    }
+}
+
+@layer components {
+    .btn {
+        @apply inline-flex items-center justify-center px-4 py-2 rounded-md font-medium text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200;
+    }
+    
+    .btn-primary {
+        @apply btn bg-primary-600 hover:bg-primary-700 text-white dark:bg-primary-700 dark:hover:bg-primary-600 focus:ring-primary-500 dark:focus:ring-offset-secondary-900;
+    }
+    
+    .btn-secondary {
+        @apply btn bg-white hover:bg-gray-50 text-secondary-700 border border-secondary-300 dark:bg-secondary-800 dark:border-secondary-600 dark:text-secondary-300 dark:hover:bg-secondary-700 focus:ring-primary-500 dark:focus:ring-offset-secondary-900;
+    }
+    
+    .btn-danger {
+        @apply btn bg-danger-600 hover:bg-danger-700 text-white dark:bg-danger-700 dark:hover:bg-danger-600 focus:ring-danger-500 dark:focus:ring-offset-secondary-900;
+    }
+    
+    .btn-success {
+        @apply btn bg-success-600 hover:bg-success-700 text-white dark:bg-success-700 dark:hover:bg-success-600 focus:ring-success-500 dark:focus:ring-offset-secondary-900;
+    }
+    
+    .btn-warning {
+        @apply btn bg-warning-600 hover:bg-warning-700 text-white dark:bg-warning-700 dark:hover:bg-warning-600 focus:ring-warning-500 dark:focus:ring-offset-secondary-900;
+    }
+    
+    .form-input {
+        @apply block w-full rounded-md shadow-sm border-secondary-300 dark:border-secondary-700 dark:bg-secondary-800 dark:text-secondary-300 focus:border-primary-500 dark:focus:border-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600;
+    }
+    
+    .form-label {
+        @apply block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1;
+    }
+
+    .card {
+        @apply bg-white dark:bg-secondary-800 overflow-hidden shadow-sm rounded-lg border border-secondary-200 dark:border-secondary-700;
+    }
+    
+    .card-header {
+        @apply px-4 py-5 sm:px-6 bg-secondary-50 dark:bg-secondary-800/80 border-b border-secondary-200 dark:border-secondary-700;
+    }
+    
+    .card-body {
+        @apply p-6;
+    }
+    
+    .card-footer {
+        @apply px-4 py-4 bg-secondary-50 dark:bg-secondary-800/80 border-t border-secondary-200 dark:border-secondary-700;
+    }
+}
