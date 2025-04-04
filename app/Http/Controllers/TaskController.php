@@ -6,30 +6,54 @@ use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class TaskController extends Controller
 {
-    public function index(Project $project)
+    public function index(Project $project): View
     {
-        $this->authorize('view', $project);
+        // Manual authorization check
+        $user = Auth::user();
+        if (!$project->is_public && !$project->members->contains($user)) {
+            abort(403, 'Unauthorized action.');
+        }
         
         $tasks = $project->tasks()->with(['assignedUser', 'creator'])->get();
         
         return view('tasks.index', compact('project', 'tasks'));
     }
 
-    public function create(Project $project)
+    public function create(Project $project): View
     {
-        $this->authorize('update', $project);
+        // Manual authorization check
+        $user = Auth::user();
+        $membership = $project->members()
+            ->where('user_id', $user->id)
+            ->wherePivotIn('role', ['owner', 'member'])
+            ->first();
+            
+        if (!$membership) {
+            abort(403, 'Unauthorized action.');
+        }
         
         $members = $project->members;
         
         return view('tasks.create', compact('project', 'members'));
     }
 
-    public function store(Request $request, Project $project)
+    public function store(Request $request, Project $project): RedirectResponse
     {
-        $this->authorize('update', $project);
+        // Manual authorization check
+        $user = Auth::user();
+        $membership = $project->members()
+            ->where('user_id', $user->id)
+            ->wherePivotIn('role', ['owner', 'member'])
+            ->first();
+            
+        if (!$membership) {
+            abort(403, 'Unauthorized action.');
+        }
         
         $request->validate([
             'title' => 'required|string|max:255',
@@ -49,9 +73,13 @@ class TaskController extends Controller
             ->with('success', 'Task created successfully.');
     }
 
-    public function show(Project $project, Task $task)
+    public function show(Project $project, Task $task): View
     {
-        $this->authorize('view', $project);
+        // Manual authorization check
+        $user = Auth::user();
+        if (!$project->is_public && !$project->members->contains($user)) {
+            abort(403, 'Unauthorized action.');
+        }
         
         // Ensure task belongs to this project
         if ($task->project_id !== $project->id) {
@@ -63,9 +91,18 @@ class TaskController extends Controller
         return view('tasks.show', compact('project', 'task'));
     }
 
-    public function edit(Project $project, Task $task)
+    public function edit(Project $project, Task $task): View
     {
-        $this->authorize('update', $project);
+        // Manual authorization check
+        $user = Auth::user();
+        $membership = $project->members()
+            ->where('user_id', $user->id)
+            ->wherePivotIn('role', ['owner', 'member'])
+            ->first();
+            
+        if (!$membership) {
+            abort(403, 'Unauthorized action.');
+        }
         
         // Ensure task belongs to this project
         if ($task->project_id !== $project->id) {
@@ -77,9 +114,18 @@ class TaskController extends Controller
         return view('tasks.edit', compact('project', 'task', 'members'));
     }
 
-    public function update(Request $request, Project $project, Task $task)
+    public function update(Request $request, Project $project, Task $task): RedirectResponse
     {
-        $this->authorize('update', $project);
+        // Manual authorization check
+        $user = Auth::user();
+        $membership = $project->members()
+            ->where('user_id', $user->id)
+            ->wherePivotIn('role', ['owner', 'member'])
+            ->first();
+            
+        if (!$membership) {
+            abort(403, 'Unauthorized action.');
+        }
         
         // Ensure task belongs to this project
         if ($task->project_id !== $project->id) {
@@ -101,9 +147,18 @@ class TaskController extends Controller
             ->with('success', 'Task updated successfully.');
     }
 
-    public function destroy(Project $project, Task $task)
+    public function destroy(Project $project, Task $task): RedirectResponse
     {
-        $this->authorize('update', $project);
+        // Manual authorization check
+        $user = Auth::user();
+        $membership = $project->members()
+            ->where('user_id', $user->id)
+            ->wherePivotIn('role', ['owner', 'member'])
+            ->first();
+            
+        if (!$membership) {
+            abort(403, 'Unauthorized action.');
+        }
         
         // Ensure task belongs to this project
         if ($task->project_id !== $project->id) {

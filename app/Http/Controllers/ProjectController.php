@@ -6,6 +6,8 @@ use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class ProjectController extends Controller
 {
@@ -50,7 +52,11 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        $this->authorize('view', $project);
+        // Instead of using authorize, check manually
+        $user = Auth::user();
+        if (!$project->is_public && !$project->members->contains($user)) {
+            abort(403, 'Unauthorized action.');
+        }
         
         $project->load(['creator', 'members', 'tasks', 'files', 'messages']);
         $members = $project->members;
@@ -61,14 +67,32 @@ class ProjectController extends Controller
 
     public function edit(Project $project)
     {
-        $this->authorize('update', $project);
+        // Instead of using authorize, check manually
+        $user = Auth::user();
+        $membership = $project->members()
+            ->where('user_id', $user->id)
+            ->wherePivotIn('role', ['owner', 'member'])
+            ->first();
+            
+        if (!$membership) {
+            abort(403, 'Unauthorized action.');
+        }
         
         return view('projects.edit', compact('project'));
     }
 
     public function update(Request $request, Project $project)
     {
-        $this->authorize('update', $project);
+        // Instead of using authorize, check manually
+        $user = Auth::user();
+        $membership = $project->members()
+            ->where('user_id', $user->id)
+            ->wherePivotIn('role', ['owner', 'member'])
+            ->first();
+            
+        if (!$membership) {
+            abort(403, 'Unauthorized action.');
+        }
         
         $request->validate([
             'title' => 'required|string|max:255',
@@ -87,7 +111,11 @@ class ProjectController extends Controller
 
     public function destroy(Project $project)
     {
-        $this->authorize('delete', $project);
+        // Instead of using authorize, check manually
+        $user = Auth::user();
+        if ($user->id !== $project->creator_id) {
+            abort(403, 'Unauthorized action.');
+        }
         
         $project->delete();
 
@@ -97,20 +125,29 @@ class ProjectController extends Controller
 
     public function invite(Request $request, Project $project)
     {
-        $this->authorize('update', $project);
+        // Instead of using authorize, check manually
+        $user = Auth::user();
+        $membership = $project->members()
+            ->where('user_id', $user->id)
+            ->wherePivotIn('role', ['owner', 'member'])
+            ->first();
+            
+        if (!$membership) {
+            abort(403, 'Unauthorized action.');
+        }
         
         $request->validate([
             'email' => 'required|email|exists:users,email',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $invitedUser = User::where('email', $request->email)->first();
 
         // Check if already a member
-        if ($project->members()->where('user_id', $user->id)->exists()) {
+        if ($project->members()->where('user_id', $invitedUser->id)->exists()) {
             return back()->with('error', 'User is already invited to this project.');
         }
 
-        $project->members()->attach($user->id, ['role' => 'pending']);
+        $project->members()->attach($invitedUser->id, ['role' => 'pending']);
 
         // In a real app, you would send an email notification here
 
@@ -141,7 +178,16 @@ class ProjectController extends Controller
 
     public function removeMember(Project $project, User $user)
     {
-        $this->authorize('update', $project);
+        // Instead of using authorize, check manually
+        $currentUser = Auth::user();
+        $membership = $project->members()
+            ->where('user_id', $currentUser->id)
+            ->wherePivotIn('role', ['owner', 'member'])
+            ->first();
+            
+        if (!$membership) {
+            abort(403, 'Unauthorized action.');
+        }
         
         // Cannot remove the creator
         if ($user->id === $project->creator_id) {

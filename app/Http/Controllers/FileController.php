@@ -8,21 +8,36 @@ use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class FileController extends Controller
 {
-    public function index(Project $project)
+    public function index(Project $project): View
     {
-        $this->authorize('view', $project);
+        // Manual authorization check
+        $user = Auth::user();
+        if (!$project->is_public && !$project->members->contains($user)) {
+            abort(403, 'Unauthorized action.');
+        }
         
         $files = $project->files()->with('uploader')->get();
         
         return view('files.index', compact('project', 'files'));
     }
 
-    public function upload(Request $request, Project $project, Task $task = null)
+    public function upload(Request $request, Project $project, Task $task = null): RedirectResponse
     {
-        $this->authorize('update', $project);
+        // Manual authorization check
+        $user = Auth::user();
+        $membership = $project->members()
+            ->where('user_id', $user->id)
+            ->wherePivotIn('role', ['owner', 'member'])
+            ->first();
+            
+        if (!$membership) {
+            abort(403, 'Unauthorized action.');
+        }
         
         // Ensure task belongs to this project if provided
         if ($task && $task->project_id !== $project->id) {
@@ -63,7 +78,11 @@ class FileController extends Controller
 
     public function download(Project $project, File $file)
     {
-        $this->authorize('view', $project);
+        // Manual authorization check
+        $user = Auth::user();
+        if (!$project->is_public && !$project->members->contains($user)) {
+            abort(403, 'Unauthorized action.');
+        }
         
         // Ensure file belongs to this project
         if ($file->project_id !== $project->id) {
@@ -80,9 +99,18 @@ class FileController extends Controller
         return back()->with('error', 'File not found.');
     }
 
-    public function destroy(Project $project, File $file)
+    public function destroy(Project $project, File $file): RedirectResponse
     {
-        $this->authorize('update', $project);
+        // Manual authorization check
+        $user = Auth::user();
+        $membership = $project->members()
+            ->where('user_id', $user->id)
+            ->wherePivotIn('role', ['owner', 'member'])
+            ->first();
+            
+        if (!$membership) {
+            abort(403, 'Unauthorized action.');
+        }
         
         // Ensure file belongs to this project
         if ($file->project_id !== $project->id) {
