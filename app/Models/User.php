@@ -15,6 +15,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'bio',
+        'profile_photo_path',
+        'is_active',
     ];
 
     protected $hidden = [
@@ -25,6 +29,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_active' => 'boolean',
+    ];
+    
+    protected $attributes = [
+        'role' => 'user',
+        'is_active' => true,
     ];
 
     public function skills()
@@ -69,5 +79,15 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+    
+    public function joinRequests()
+    {
+        return $this->hasMany(JoinRequest::class);
+    }
+    
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
     }
 }

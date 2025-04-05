@@ -27,6 +27,16 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
+    // Add these routes to the existing web.php file inside the auth middleware group
+    Route::post('/skills/add-to-profile', [SkillController::class, 'addToProfile'])->name('skills.addToProfile');
+    Route::delete('/skills/{skill}/remove-from-profile', [SkillController::class, 'removeFromProfile'])->name('skills.removeFromProfile');
+
+    // Add these routes to the existing web.php file inside the auth middleware group
+    Route::post('/projects/{project}/request-join', [ProjectController::class, 'requestJoin'])->name('projects.request-join');
+    Route::post('/projects/{project}/approve-join-request/{requestId}', [ProjectController::class, 'approveJoinRequest'])->name('projects.approve-join-request');
+    Route::post('/projects/{project}/reject-join-request/{requestId}', [ProjectController::class, 'rejectJoinRequest'])->name('projects.reject-join-request');
+    Route::post('/projects/{project}/cancel-join-request', [ProjectController::class, 'cancelJoinRequest'])->name('projects.cancel-join-request');
+
     // User Profile Routes
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -63,4 +73,32 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/projects/{project}/tasks/{task}/comments', [CommentController::class, 'store'])->name('projects.tasks.comments.store');
     Route::put('/projects/{project}/comments/{comment}', [CommentController::class, 'update'])->name('projects.comments.update');
     Route::delete('/projects/{project}/comments/{comment}', [CommentController::class, 'destroy'])->name('projects.comments.destroy');
+});
+
+// Admin routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');
+    
+    // Users management
+    Route::get('/users', [App\Http\Controllers\Admin\AdminController::class, 'users'])->name('users.index');
+    Route::get('/users/{user}', [App\Http\Controllers\Admin\AdminController::class, 'showUser'])->name('users.show');
+    Route::get('/users/{user}/edit', [App\Http\Controllers\Admin\AdminController::class, 'editUser'])->name('users.edit');
+    Route::put('/users/{user}', [App\Http\Controllers\Admin\AdminController::class, 'updateUser'])->name('users.update');
+    
+    // Projects management
+    Route::get('/projects', [App\Http\Controllers\Admin\AdminController::class, 'projects'])->name('projects.index');
+    Route::get('/projects/{project}', [App\Http\Controllers\Admin\AdminController::class, 'showProject'])->name('projects.show');
+    Route::delete('/projects/{project}', [App\Http\Controllers\Admin\AdminController::class, 'deleteProject'])->name('projects.destroy');
+    
+    // Skills management
+    Route::get('/skills', [App\Http\Controllers\Admin\AdminController::class, 'skills'])->name('skills.index');
+    Route::get('/skills/create', [App\Http\Controllers\Admin\AdminController::class, 'createSkill'])->name('skills.create');
+    Route::post('/skills', [App\Http\Controllers\Admin\AdminController::class, 'storeSkill'])->name('skills.store');
+    Route::get('/skills/{skill}/edit', [App\Http\Controllers\Admin\AdminController::class, 'editSkill'])->name('skills.edit');
+    Route::put('/skills/{skill}', [App\Http\Controllers\Admin\AdminController::class, 'updateSkill'])->name('skills.update');
+    Route::delete('/skills/{skill}', [App\Http\Controllers\Admin\AdminController::class, 'deleteSkill'])->name('skills.destroy');
+    
+    // System settings
+    Route::get('/settings', [App\Http\Controllers\Admin\AdminController::class, 'systemSettings'])->name('settings');
+    Route::put('/settings', [App\Http\Controllers\Admin\AdminController::class, 'updateSystemSettings'])->name('settings.update');
 });

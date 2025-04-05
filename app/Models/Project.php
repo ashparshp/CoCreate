@@ -17,12 +17,14 @@ class Project extends Model
         'end_date',
         'status',
         'is_public',
+        'requires_approval',
     ];
 
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
         'is_public' => 'boolean',
+        'requires_approval' => 'boolean',
     ];
 
     public function creator()
@@ -55,5 +57,39 @@ class Project extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+    
+    public function joinRequests()
+    {
+        return $this->hasMany(JoinRequest::class);
+    }
+    
+    /**
+     * Get progress percentage for the project
+     */
+    public function getProgressPercentage()
+    {
+        $totalTasks = $this->tasks()->count();
+        if ($totalTasks === 0) {
+            return 0;
+        }
+        
+        $completedTasks = $this->tasks()->where('status', 'completed')->count();
+        return round(($completedTasks / $totalTasks) * 100);
+    }
+    
+    /**
+     * Get tasks grouped by status for kanban view
+     */
+    public function getTasksByStatus()
+    {
+        $tasksByStatus = [
+            'to_do' => $this->tasks()->where('status', 'to_do')->get(),
+            'in_progress' => $this->tasks()->where('status', 'in_progress')->get(),
+            'review' => $this->tasks()->where('status', 'review')->get(),
+            'completed' => $this->tasks()->where('status', 'completed')->get(),
+        ];
+        
+        return $tasksByStatus;
     }
 }

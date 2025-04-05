@@ -27,31 +27,31 @@
 
 @layer components {
     .btn {
-        @apply inline-flex items-center justify-center px-4 py-2 rounded-md font-medium text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200;
+        @apply inline-flex items-center justify-center px-4 py-2 rounded-md font-medium text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200 shadow-sm;
     }
 
     .btn-primary {
-        @apply btn bg-primary-600 hover:bg-primary-700 text-white dark:bg-primary-700 dark:hover:bg-primary-600 focus:ring-primary-500 dark:focus:ring-offset-secondary-900;
+        @apply btn bg-gradient-to-r from-indigo-600 to-indigo-800 hover:from-indigo-700 hover:to-indigo-900 text-white dark:from-indigo-700 dark:to-indigo-900 dark:hover:from-indigo-600 dark:hover:to-indigo-800 focus:ring-indigo-500 dark:focus:ring-offset-secondary-900 transform hover:scale-105;
     }
 
     .btn-secondary {
-        @apply btn bg-white hover:bg-gray-50 text-secondary-700 border border-secondary-300 dark:bg-secondary-900 dark:border-secondary-600 dark:text-secondary-300 dark:hover:bg-secondary-700 focus:ring-primary-500 dark:focus:ring-offset-secondary-900;
+        @apply btn bg-white hover:bg-gray-50 text-secondary-700 border border-secondary-300 dark:bg-secondary-900 dark:border-secondary-600 dark:text-secondary-300 dark:hover:bg-secondary-800 focus:ring-indigo-500 dark:focus:ring-offset-secondary-900;
     }
 
     .btn-danger {
-        @apply btn bg-danger-600 hover:bg-danger-700 text-white dark:bg-danger-700 dark:hover:bg-danger-600 focus:ring-danger-500 dark:focus:ring-offset-secondary-900;
+        @apply btn bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white dark:from-red-700 dark:to-red-800 dark:hover:from-red-600 dark:hover:to-red-700 focus:ring-red-500 dark:focus:ring-offset-secondary-900;
     }
 
     .btn-success {
-        @apply btn bg-success-600 hover:bg-success-700 text-white dark:bg-success-700 dark:hover:bg-success-600 focus:ring-success-500 dark:focus:ring-offset-secondary-900;
+        @apply btn bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white dark:from-green-700 dark:to-green-800 dark:hover:from-green-600 dark:hover:to-green-700 focus:ring-green-500 dark:focus:ring-offset-secondary-900;
     }
 
     .btn-warning {
-        @apply btn bg-warning-600 hover:bg-warning-700 text-white dark:bg-warning-700 dark:hover:bg-warning-600 focus:ring-warning-500 dark:focus:ring-offset-secondary-900;
+        @apply btn bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white dark:from-yellow-600 dark:to-yellow-700 dark:hover:from-yellow-500 dark:hover:to-yellow-600 focus:ring-yellow-500 dark:focus:ring-offset-secondary-900;
     }
 
-    .form-input {
-        @apply block w-full rounded-md shadow-sm border-secondary-300 dark:border-secondary-700 dark:bg-secondary-900 dark:text-secondary-300 focus:border-primary-500 dark:focus:border-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600;
+    .form-input, .form-textarea, .form-select {
+        @apply block w-full rounded-md shadow-sm border-secondary-300 dark:border-secondary-700 dark:bg-secondary-900 dark:text-secondary-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 transition-colors duration-200;
     }
 
     .form-label {
@@ -59,11 +59,11 @@
     }
 
     .card {
-        @apply bg-white dark:bg-secondary-900 overflow-hidden shadow-sm rounded-lg border border-secondary-200 dark:border-secondary-700;
+        @apply bg-white dark:bg-secondary-900 overflow-hidden shadow-sm rounded-lg border border-secondary-200 dark:border-secondary-700 transition-all duration-300 hover:shadow-md;
     }
 
     .card-header {
-        @apply px-4 py-5 sm:px-6 bg-secondary-50 dark:bg-secondary-900/80 border-b border-secondary-200 dark:border-secondary-700;
+        @apply px-4 py-5 sm:px-6 bg-indigo-50 dark:bg-indigo-900/20 border-b border-secondary-200 dark:border-secondary-700;
     }
 
     .card-body {
@@ -73,4 +73,91 @@
     .card-footer {
         @apply px-4 py-4 bg-secondary-50 dark:bg-secondary-900/80 border-t border-secondary-200 dark:border-secondary-700;
     }
+    
+    .badge {
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    }
+    
+    .badge-primary {
+        @apply badge bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300;
+    }
+    
+    .badge-success {
+        @apply badge bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300;
+    }
+    
+    .badge-danger {
+        @apply badge bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300;
+    }
+    
+    .badge-warning {
+        @apply badge bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300;
+    }
+    
+    .badge-info {
+        @apply badge bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300;
+    }
+    
+    .badge-secondary {
+        @apply badge bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300;
+    }
 }
+
+/* Animation Keyframes */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInFromRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInFromLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Animation Classes */
+.animate-fadeIn {
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-slideInFromRight {
+    animation: slideInFromRight 0.6s ease-out forwards;
+}
+
+.animate-slideInFromLeft {
+    animation: slideInFromLeft 0.6s ease-out forwards;
+}
+
+.animate-pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-bounce {
+    animation: bounce 2s ease-in-out infinite;
+}
+
+/* Stagger Animations for Lists */
+.stagger-animation > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-animation > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-animation > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-animation > *:nth-child(4) { animation-delay: 0.4s; }
+.stagger-animation > *:nth-child(5) { animation-delay: 0.5s; }
+.stagger-animation > *:nth-child(6) { animation-delay: 0.6s; }
+.stagger-animation > *:nth-child(7) { animation-delay: 0.7s; }
+.stagger-animation > *:nth-child(8) { animation-delay: 0.8s; }
+.stagger-animation > *:nth-child(9) { animation-delay: 0.9s; }
+.stagger-animation > *:nth-child(10) { animation-delay: 1.0s; }

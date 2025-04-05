@@ -315,6 +315,147 @@
           @endif
         </div>
       </div>
+
+      <!-- Add this section in the projects/show.blade.php file, after the Team Members section -->
+
+@if($project->creator_id == Auth::id() && $joinRequests->count() > 0)
+<div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-6 mb-6">
+    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">{{ __('Join Requests') }} ({{ $joinRequests->where('status', 'pending')->count() }})</h3>
+    
+    @if($joinRequests->where('status', 'pending')->count() > 0)
+        <ul class="space-y-4">
+            @foreach($joinRequests->where('status', 'pending') as $request)
+                <li class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600 animate-fadeIn" style="animation-delay: {{ $loop->index * 0.1 }}s">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div class="flex items-center mb-3 sm:mb-0">
+                            <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-700 dark:text-indigo-300 font-semibold text-sm overflow-hidden">
+                                {{ substr($request->user->name, 0, 1) }}
+                            </div>
+                            <div class="ml-3">
+                                <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $request->user->name }}</h4>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Requested') }}: {{ $request->created_at->diffForHumans() }}</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <form action="{{ route('projects.approve-join-request', [$project, $request->id]) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="px-3 py-1 bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-white text-xs rounded-md shadow transition-colors duration-200">
+                                    {{ __('Approve') }}
+                                </button>
+                            </form>
+                            <form action="{{ route('projects.reject-join-request', [$project, $request->id]) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="px-3 py-1 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 text-white text-xs rounded-md shadow transition-colors duration-200">
+                                    {{ __('Decline') }}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    @if($request->message)
+                        <div class="mt-3 px-4 py-3 bg-gray-100 dark:bg-gray-600 rounded text-sm text-gray-700 dark:text-gray-300 border-l-4 border-indigo-400 dark:border-indigo-500">
+                            {{ $request->message }}
+                        </div>
+                    @endif
+                </li>
+            @endforeach
+        </ul>
+    @else
+        <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('No pending join requests.') }}</p>
+    @endif
+</div>
+@endif
+
+<!-- Add this button to the show.blade.php file if the user is not a member and the project is public -->
+
+@if(!$project->members->contains('id', Auth::id()) && $project->is_public)
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-6">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">{{ __('Join This Project') }}</h3>
+        
+        @if($userJoinRequest)
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
+                @if($userJoinRequest->status === 'pending')
+                    <p class="text-yellow-600 dark:text-yellow-400 font-medium mb-2">{{ __('Your request to join this project is pending approval.') }}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">{{ __('You will be notified when the project owner reviews your request.') }}</p>
+                    <form action="{{ route('projects.cancel-join-request', $project) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 text-sm rounded-md transition-colors duration-200">
+                            {{ __('Cancel Request') }}
+                        </button>
+                    </form>
+                @elseif($userJoinRequest->status === 'rejected')
+                    <p class="text-red-600 dark:text-red-400 font-medium">{{ __('Your request to join this project was not approved.') }}</p>
+                @endif
+            </div>
+        @else
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{ __('Interested in collaborating on this project? Send a request to join the team.') }}</p>
+            <button type="button" 
+                    onclick="openJoinRequestModal({{ $project->id }}, '{{ $project->title }}')" 
+                    class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white rounded-md shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+                {{ __('Request to Join') }}
+            </button>
+        @endif
+    </div>
+@endif
+
+<!-- Join Request Modal (same as in index.blade.php) -->
+<div id="joinRequestModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="joinModalContent">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{{ __('Request to Join') }} <span id="projectTitle"></span></h3>
+        
+        <form id="joinRequestForm" action="" method="POST">
+            @csrf
+            
+            <div class="mb-4">
+                <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    {{ __('Message (Optional)') }}
+                </label>
+                <textarea name="message" id="message" rows="4" 
+                          class="w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring focus:ring-indigo-500 dark:focus:ring-indigo-400 transition-colors duration-200"
+                          placeholder="{{ __('Introduce yourself and explain why you want to join this project...') }}"></textarea>
+            </div>
+            
+            <div class="flex justify-end space-x-3 mt-6">
+                <button type="button" onclick="closeJoinModal()" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-md transition-colors duration-200">
+                    {{ __('Cancel') }}
+                </button>
+                <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white rounded-md shadow-md hover:shadow-lg transition-all duration-200">
+                    {{ __('Send Request') }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Join Request Modal Functionality
+    function openJoinRequestModal(projectId, projectTitle) {
+        const modal = document.getElementById('joinRequestModal');
+        const modalContent = document.getElementById('joinModalContent');
+        const form = document.getElementById('joinRequestForm');
+        const titleSpan = document.getElementById('projectTitle');
+        
+        form.action = `/projects/${projectId}/request-join`;
+        titleSpan.textContent = projectTitle;
+        
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modalContent.classList.remove('scale-95', 'opacity-0');
+            modalContent.classList.add('scale-100', 'opacity-100');
+        }, 10);
+    }
+    
+    function closeJoinModal() {
+        const modal = document.getElementById('joinRequestModal');
+        const modalContent = document.getElementById('joinModalContent');
+        
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+</script>
     </div>
   </div>
 </x-app-layout>
