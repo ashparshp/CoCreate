@@ -1,5 +1,22 @@
-<svg viewBox="0 0 50 50" fill="currentColor" xmlns="http://www.w3.org/2000/svg" {{ $attributes }}>
-    <path d="M25 2C12.3 2 2 12.3 2 25s10.3 23 23 23 23-10.3 23-23S37.7 2 25 2zm0 4c10.5 0 19 8.5 19 19s-8.5 19-19 19S6 35.5 6 25 14.5 6 25 6z"/>
-    <path d="M35 20H15v-6h20v6zm-16 2h12v12H19V22z"/>
-    <path d="M32 30h-4v4h4v-4zm-9-6h-4v4h4v-4z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200">
+  <!-- Background -->
+  <rect width="400" height="200" fill="#ffffff" rx="10" ry="10"/>
+  
+  <!-- Main circular elements representing collaboration -->
+  <circle cx="130" cy="100" r="40" fill="#4285F4" opacity="0.9"/>
+  <circle cx="180" cy="100" r="40" fill="#34A853" opacity="0.9"/>
+  <circle cx="230" cy="100" r="40" fill="#FBBC05" opacity="0.9"/>
+  
+  <!-- Text -->
+  <text x="200" y="160" font-family="Arial, sans-serif" font-size="32" font-weight="bold" text-anchor="middle" fill="#333333">CoCreate</text>
+  
+  <!-- Connector lines -->
+  <line x1="130" y1="100" x2="230" y2="100" stroke="#333333" stroke-width="3" stroke-opacity="0.5"/>
+  <line x1="130" y1="100" x2="180" y2="140" stroke="#333333" stroke-width="3" stroke-opacity="0.5"/>
+  <line x1="230" y1="100" x2="180" y2="140" stroke="#333333" stroke-width="3" stroke-opacity="0.5"/>
+  
+  <!-- Small icons representing collaboration features -->
+  <rect x="115" y="90" width="30" height="20" fill="white" rx="3" ry="3"/>
+  <rect x="165" y="90" width="30" height="20" fill="white" rx="3" ry="3"/>
+  <rect x="215" y="90" width="30" height="20" fill="white" rx="3" ry="3"/>
 </svg>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <!-- Background Circle -->
+  <circle cx="200" cy="200" r="180" fill="#f0f4ff" stroke="#4f46e5" stroke-width="12"/>
+  
+  <!-- Connector Lines -->
+  <path d="M200 140 L120 250 M200 140 L280 250 M120 250 L280 250" stroke="#4f46e5" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Node Circles -->
+  <circle cx="200" cy="140" r="40" fill="#4f46e5"/>
+  <circle cx="120" cy="250" r="40" fill="#4f46e5"/>
+  <circle cx="280" cy="250" r="40" fill="#4f46e5"/>
+  
+  <!-- Inner Details -->
+  <circle cx="200" cy="140" r="25" fill="#f0f4ff"/>
+  <circle cx="120" cy="250" r="25" fill="#f0f4ff"/>
+  <circle cx="280" cy="250" r="25" fill="#f0f4ff"/>
+  
+  <!-- Inner Icons -->
+  <path d="M190 130 L210 150 M190 150 L210 130" stroke="#4f46e5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="110" y="240" width="20" height="20" rx="3" fill="#4f46e5"/>
+  <circle cx="280" cy="250" r="10" fill="#4f46e5"/>
+</svg>

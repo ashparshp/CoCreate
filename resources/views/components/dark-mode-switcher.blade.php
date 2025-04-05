@@ -1,7 +1,7 @@
 <button
     onclick="toggleDarkMode()"
     type="button" 
-    {{ $attributes->merge(['class' => 'relative inline-flex flex-shrink-0 h-6 transition-colors duration-200 ease-in-out border-2 border-transparent rounded-full cursor-pointer bg-secondary-200 dark:bg-secondary-700 w-11 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-secondary-800']) }}
+    {{ $attributes->merge(['class' => 'relative inline-flex flex-shrink-0 h-6 transition-colors duration-200 ease-in-out border-2 border-transparent rounded-full cursor-pointer bg-secondary-200 dark:bg-secondary-700 w-11 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-secondary-900']) }}
     aria-label="Toggle Dark Mode"
 >
     <span class="sr-only">Toggle dark mode</span>

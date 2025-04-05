@@ -1,55 +1,86 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-
-        <title>{{ config('app.name', 'Student Project Portal') }}</title>
-
-        <!-- Favicon -->
-        <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
-        
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans h-full bg-gray-50 dark:bg-secondary-900">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
-            <div>
-                <a href="/" class="flex items-center justify-center">
-                    <x-application-logo class="w-20 h-20 fill-current text-primary-600 dark:text-primary-400" />
-                </a>
-            </div>
-
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-secondary-800 shadow-md overflow-hidden sm:rounded-lg border border-secondary-200 dark:border-secondary-700">
-                {{ $slot }}
-            </div>
-            
-            <div class="mt-8 text-center text-sm text-secondary-500 dark:text-secondary-400">
-                &copy; {{ date('Y') }} Student Project Collaboration Portal
-            </div>
-        </div>
-        
-        <!-- Dark mode toggle button for guest pages -->
-        <div class="fixed bottom-4 right-4">
-            <button 
-                onclick="toggleDarkMode()"
-                class="p-2 rounded-full bg-secondary-200 dark:bg-secondary-700 text-secondary-700 dark:text-secondary-200 hover:bg-secondary-300 dark:hover:bg-secondary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-offset-secondary-900 transition-colors duration-200"
-                aria-label="Toggle Dark Mode"
-            >
-                <!-- Sun icon (shown in dark mode) -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden dark:block" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
-                </svg>
-                <!-- Moon icon (shown in light mode) -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 block dark:hidden" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-                </svg>
-            </button>
-        </div>
-    </body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ config('app.name', 'Student Project Portal') }}</title>
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script>
+      // Toggle dark mode and persist preference
+      function toggleDarkMode() {
+        document.documentElement.classList.toggle('dark');
+        localStorage.setItem('darkMode', document.documentElement.classList.contains('dark') ? 'true' : 'false');
+      }
+      // On load, set dark mode if preferred
+      if (
+        localStorage.getItem('darkMode') === 'true' ||
+        (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ) {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
+  </head>
+  <body class="font-sans h-full bg-gradient-to-br from-indigo-200 via-purple-300 to-indigo-400 dark:from-gray-800 dark:via-gray-700 dark:to-gray-900">
+    <div class="min-h-screen flex flex-col items-center justify-center py-8">
+      <div>
+        <a href="/" class="flex items-center justify-center">
+          <x-application-logo class="w-20 h-20 fill-current text-primary-600 dark:text-primary-400" />
+        </a>
+      </div>
+      <!-- Updated container with semi-transparent background and backdrop blur -->
+      <div class="w-full sm:max-w-md mt-6 px-8 py-6 bg-white/70 dark:bg-gray-900/70 backdrop-blur-md shadow-xl rounded-lg border border-gray-200 dark:border-gray-700">
+        {{ $slot }}
+      </div>
+      <div class="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
+        &copy; {{ date('Y') }} Student Project Collaboration Portal
+      </div>
+    </div>
+    
+    <!-- Dark Mode Toggle Button for Guest Pages -->
+    <div class="fixed bottom-4 right-4">
+      <button 
+          onclick="toggleDarkMode()"
+          class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-offset-gray-900 transition-colors duration-200"
+          aria-label="Toggle Dark Mode">
+        <!-- Provided Toggle SVG (the color change is handled via JavaScript since Alpine isn't used here) -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" 
+             id="darkToggleIcon"
+             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path id="darkTogglePath" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 3a9 9 0 000 18 9 9 0 010-18z" />
+        </svg>
+      </button>
+    </div>
+    
+    <script>
+      // Optional: Update the toggle icon based on dark mode state
+      const darkToggleIcon = document.getElementById('darkToggleIcon');
+      const darkTogglePath = document.getElementById('darkTogglePath');
+      function updateToggleIcon() {
+        if(document.documentElement.classList.contains('dark')) {
+          // When dark, show the sun icon path
+          darkTogglePath.setAttribute('d', 'M12 3v1m0 16v-1m8-8h1M3 12H2m15.364 6.364l.707.707M6.343 6.343l-.707-.707m0 12.728l.707.707M17.657 6.343l-.707-.707');
+          darkToggleIcon.classList.remove('text-yellow-500');
+          darkToggleIcon.classList.add('text-indigo-300');
+        } else {
+          // When light, show the moon icon path
+          darkTogglePath.setAttribute('d', 'M12 3a9 9 0 000 18 9 9 0 010-18z');
+          darkToggleIcon.classList.remove('text-indigo-300');
+          darkToggleIcon.classList.add('text-yellow-500');
+        }
+      }
+      updateToggleIcon();
+      // Update icon after toggle click
+      document.querySelector('button[onclick="toggleDarkMode()"]').addEventListener('click', () => {
+        setTimeout(updateToggleIcon, 100);
+      });
+    </script>
+  </body>
 </html>

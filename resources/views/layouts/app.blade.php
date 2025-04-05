@@ -23,7 +23,7 @@
 
             <!-- Page Heading -->
             @isset($header)
-                <header class="bg-white dark:bg-secondary-800 shadow">
+                <header class="bg-white dark:bg-secondary-900 shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
@@ -36,7 +36,7 @@
             </main>
             
             <!-- Footer -->
-            <footer class="bg-white dark:bg-secondary-800 shadow-inner py-4 mt-auto">
+            <footer class="bg-white dark:bg-secondary-900 shadow-inner py-4 mt-auto">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="text-center text-sm text-secondary-500 dark:text-secondary-400">
                         &copy; {{ date('Y') }} Student Project Collaboration Portal. All rights reserved.
