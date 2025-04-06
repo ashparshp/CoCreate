@@ -12,6 +12,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ProjectJoinRequest;
 use App\Mail\ProjectJoinRequestApproved;
+use App\Mail\ProjectJoinRequestRejected;
+use App\Mail\ProjectInvitation;
 
 class ProjectController extends Controller
 {
@@ -19,7 +21,10 @@ class ProjectController extends Controller
     {
         $user = Auth::user();
         
+        // Get projects where user is a member
         $myProjects = $user->projects()->with('creator')->get();
+        
+        // Get ONLY public projects that the user is not already a member of
         $publicProjects = Project::where('is_public', true)
             ->whereNotIn('id', $myProjects->pluck('id'))
             ->with(['creator', 'joinRequests' => function($query) use ($user) {
@@ -46,8 +51,21 @@ class ProjectController extends Controller
             'requires_approval' => 'boolean',
         ]);
 
-        $project = new Project($request->all());
+        // Create a new project with explicit boolean casting
+        $project = new Project();
+        $project->title = $request->title;
+        $project->description = $request->description;
+        $project->start_date = $request->start_date;
+        $project->end_date = $request->end_date;
         $project->creator_id = Auth::id();
+        
+        // Explicit handling of checkbox values
+        $project->is_public = $request->has('is_public');
+        
+        // If project is not public, requires_approval must be false
+        // If project is public, use the requires_approval value from the form
+        $project->requires_approval = $project->is_public ? $request->has('requires_approval') : false;
+        
         $project->save();
 
         // Add creator as project owner
@@ -59,10 +77,15 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        // Instead of using authorize, check manually
+        // Get the authenticated user
         $user = Auth::user();
-        if (!$project->is_public && !$project->members->contains($user)) {
-            abort(403, 'Unauthorized action.');
+        
+        // Check if the user is a member of the project
+        $isMember = $project->members->contains('id', $user->id);
+        
+        // If project is private and user is not a member, deny access
+        if (!$project->is_public && !$isMember) {
+            abort(403, 'You do not have access to this project.');
         }
         
         $project->load(['creator', 'members', 'tasks', 'files', 'messages']);
@@ -73,7 +96,7 @@ class ProjectController extends Controller
         // Check if current user has a pending join request
         $userJoinRequest = $project->joinRequests()->where('user_id', $user->id)->first();
         
-        return view('projects.show', compact('project', 'members', 'pendingMembers', 'joinRequests', 'userJoinRequest'));
+        return view('projects.show', compact('project', 'members', 'pendingMembers', 'joinRequests', 'userJoinRequest', 'isMember'));
     }
 
     public function edit(Project $project)
@@ -115,7 +138,21 @@ class ProjectController extends Controller
             'requires_approval' => 'boolean',
         ]);
 
-        $project->update($request->all());
+        // Update with explicit handling of boolean fields
+        $project->title = $request->title;
+        $project->description = $request->description;
+        $project->start_date = $request->start_date;
+        $project->end_date = $request->end_date;
+        $project->status = $request->status;
+        
+        // Explicit handling of checkbox values
+        $project->is_public = $request->has('is_public');
+        
+        // If project is not public, requires_approval must be false
+        // If project is public, use the requires_approval value from the form
+        $project->requires_approval = $project->is_public ? $request->has('requires_approval') : false;
+        
+        $project->save();
 
         return redirect()->route('projects.show', $project)
             ->with('success', 'Project updated successfully.');
@@ -163,7 +200,7 @@ class ProjectController extends Controller
 
         // Send email notification
         try {
-            Mail::to($invitedUser->email)->send(new \App\Mail\ProjectInvitation($project, $user));
+            Mail::to($invitedUser->email)->send(new ProjectInvitation($project, $user));
         } catch (\Exception $e) {
             // Continue even if email fails
             report($e);
@@ -234,11 +271,18 @@ class ProjectController extends Controller
             return back()->with('error', 'You already have a pending join request for this project.');
         }
         
+        // If the project doesn't require approval, add user directly
+        if (!$project->requires_approval) {
+            $project->members()->attach(Auth::id(), ['role' => 'member']);
+            return redirect()->route('projects.show', $project)
+                ->with('success', 'You have successfully joined the project.');
+        }
+        
         $request->validate([
             'message' => 'nullable|string|max:500',
         ]);
         
-        // Create join request
+        // Create join request for projects that require approval
         $joinRequest = $project->joinRequests()->create([
             'user_id' => Auth::id(),
             'message' => $request->message,
@@ -296,7 +340,7 @@ class ProjectController extends Controller
         
         // Notify user
         try {
-            Mail::to($joinRequest->user->email)->send(new \App\Mail\ProjectJoinRequestRejected($project));
+            Mail::to($joinRequest->user->email)->send(new ProjectJoinRequestRejected($project));
         } catch (\Exception $e) {
             // Continue even if email fails
             report($e);

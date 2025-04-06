@@ -365,9 +365,8 @@
 </div>
 @endif
 
-<!-- Add this button to the show.blade.php file if the user is not a member and the project is public -->
-
-@if(!$project->members->contains('id', Auth::id()) && $project->is_public)
+<!-- Only show join project section if user is not a member AND project is public -->
+@if(!$project->members->contains('id', Auth::id()) && $project->is_public === true)
     <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-6">
         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">{{ __('Join This Project') }}</h3>
         
@@ -387,12 +386,22 @@
                 @endif
             </div>
         @else
-            <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{ __('Interested in collaborating on this project? Send a request to join the team.') }}</p>
-            <button type="button" 
-                    onclick="openJoinRequestModal({{ $project->id }}, '{{ $project->title }}')" 
-                    class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white rounded-md shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
-                {{ __('Request to Join') }}
-            </button>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{ __('Interested in collaborating on this project?') }}</p>
+            @if($project->requires_approval)
+                <button type="button" 
+                        onclick="openJoinRequestModal({{ $project->id }}, '{{ $project->title }}')" 
+                        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white rounded-md shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+                    {{ __('Request to Join') }}
+                </button>
+            @else
+                <form action="{{ route('projects.request-join', $project) }}" method="POST">
+                    @csrf
+                    <button type="submit" 
+                           class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white rounded-md shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+                        {{ __('Join Project') }}
+                    </button>
+                </form>
+            @endif
         @endif
     </div>
 @endif

@@ -166,11 +166,21 @@
                                                         {{ __('Request Pending') }}
                                                     </span>
                                                 @else
-                                                    <button type="button"
-                                                            onclick="openJoinRequestModal({{ $project->id }}, '{{ $project->title }}')"
-                                                            class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white text-xs rounded-full shadow-sm transition-colors duration-200">
-                                                        {{ __('Request to Join') }}
-                                                    </button>
+                                                    @if($project->requires_approval)
+                                                        <button type="button"
+                                                                onclick="openJoinRequestModal({{ $project->id }}, '{{ $project->title }}')"
+                                                                class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white text-xs rounded-full shadow-sm transition-colors duration-200">
+                                                            {{ __('Request to Join') }}
+                                                        </button>
+                                                    @else
+                                                        <form action="{{ route('projects.request-join', $project) }}" method="POST">
+                                                            @csrf
+                                                            <button type="submit" 
+                                                                   class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white text-xs rounded-full shadow-sm transition-colors duration-200">
+                                                                {{ __('Join Project') }}
+                                                            </button>
+                                                        </form>
+                                                    @endif
                                                 @endif
                                             </div>
                                         </div>
@@ -205,7 +215,7 @@
                     <button type="button" onclick="closeJoinModal()" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-md transition-colors duration-200">
                         {{ __('Cancel') }}
                     </button>
-                    <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white rounded-md shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white rounded-md shadow-md hover:shadow-lg transition-all duration-200">
                         {{ __('Send Request') }}
                     </button>
                 </div>

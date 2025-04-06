@@ -127,6 +127,7 @@
     document.addEventListener('DOMContentLoaded', function() {
       const isPublicCheckbox = document.getElementById('is_public');
       const joinApprovalSection = document.getElementById('joinApprovalSection');
+      const requiresApprovalCheckbox = document.getElementById('requires_approval');
       
       // Initial state
       toggleJoinApprovalSection();
@@ -139,6 +140,8 @@
           joinApprovalSection.classList.remove('hidden');
         } else {
           joinApprovalSection.classList.add('hidden');
+          // If project is not public, automatically set requires_approval to false
+          requiresApprovalCheckbox.checked = false;
         }
       }
     });

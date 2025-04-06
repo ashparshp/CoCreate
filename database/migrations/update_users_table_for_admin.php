@@ -6,20 +6,39 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Apply the migration: Add new columns if they don't already exist.
+     */
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', ['user', 'admin'])->default('user')->after('remember_token');
-            $table->text('bio')->nullable()->after('role');
-            $table->string('profile_photo_path', 2048)->nullable()->after('bio');
-            $table->boolean('is_active')->default(true)->after('profile_photo_path');
+            if (!Schema::hasColumn('users', 'role')) {
+                $table->enum('role', ['user', 'admin'])->default('user')->after('remember_token');
+            }
+
+            if (!Schema::hasColumn('users', 'bio')) {
+                $table->text('bio')->nullable()->after('role');
+            }
+
+            if (!Schema::hasColumn('users', 'profile_photo_path')) {
+                $table->string('profile_photo_path', 2048)->nullable()->after('bio');
+            }
+
+            if (!Schema::hasColumn('users', 'is_active')) {
+                $table->boolean('is_active')->default(true)->after('profile_photo_path');
+            }
         });
     }
 
+    /**
+     * Reverse the migration safely (skip dropColumn on SQLite).
+     */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['role', 'bio', 'profile_photo_path', 'is_active']);
-        });
+        if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+            Schema::table('users', function (Blueprint $table) {
+                $table->dropColumn(['role', 'bio', 'profile_photo_path', 'is_active']);
+            });
+        }
     }
 };

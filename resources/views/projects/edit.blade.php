@@ -81,21 +81,45 @@
             @enderror
           </div>
 
-          <!-- Public Project Checkbox -->
-          <div class="mb-6">
-            <div class="flex items-center">
-              <input type="checkbox" name="is_public" id="is_public" value="1" {{ old('is_public', $project->is_public) ? 'checked' : '' }}
-                     class="rounded border-gray-300 dark:border-gray-700 text-blue-600 dark:text-blue-500 shadow-sm focus:border-blue-300 dark:focus:border-blue-400 focus:ring focus:ring-blue-200 dark:focus:ring-blue-600 focus:ring-opacity-50 transition-colors duration-200">
-              <label for="is_public" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                {{ __('Make this project visible to all users') }}
-              </label>
+          <!-- Project Visibility Settings -->
+          <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg mb-6 border border-gray-200 dark:border-gray-600">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+              {{ __('Project Visibility Settings') }}
+            </h3>
+
+            <!-- Public Project Checkbox -->
+            <div class="mb-4">
+              <div class="flex items-center">
+                <input type="checkbox" name="is_public" id="is_public" value="1" {{ old('is_public', $project->is_public) ? 'checked' : '' }}
+                       class="rounded border-gray-300 dark:border-gray-700 text-blue-600 dark:text-blue-500 shadow-sm focus:border-blue-300 dark:focus:border-blue-400 focus:ring focus:ring-blue-200 dark:focus:ring-blue-600 focus:ring-opacity-50 transition-colors duration-200">
+                <label for="is_public" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                  {{ __('Make this project visible to all users') }}
+                </label>
+              </div>
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 ml-6">
+                {{ __('Public projects are discoverable by all users of the platform.') }}
+              </p>
+              @error('is_public')
+                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+              @enderror
             </div>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              {{ __('Public projects are discoverable by all users of the platform.') }}
-            </p>
-            @error('is_public')
-              <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-            @enderror
+
+            <!-- Require Approval for Join Requests -->
+            <div id="joinApprovalSection" {{ !$project->is_public ? 'class="hidden"' : '' }}>
+              <div class="flex items-center">
+                <input type="checkbox" name="requires_approval" id="requires_approval" value="1" {{ old('requires_approval', $project->requires_approval) ? 'checked' : '' }}
+                       class="rounded border-gray-300 dark:border-gray-700 text-blue-600 dark:text-blue-500 shadow-sm focus:border-blue-300 dark:focus:border-blue-400 focus:ring focus:ring-blue-200 dark:focus:ring-blue-600 focus:ring-opacity-50 transition-colors duration-200">
+                <label for="requires_approval" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                  {{ __('Require approval for join requests') }}
+                </label>
+              </div>
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 ml-6">
+                {{ __('If enabled, you must manually approve requests from users who want to join your project.') }}
+              </p>
+              @error('requires_approval')
+                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+              @enderror
+            </div>
           </div>
 
           <!-- Form Actions -->
@@ -111,4 +135,29 @@
       </div>
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const isPublicCheckbox = document.getElementById('is_public');
+      const joinApprovalSection = document.getElementById('joinApprovalSection');
+      const requiresApprovalCheckbox = document.getElementById('requires_approval');
+      
+      // Initial state
+      toggleJoinApprovalSection();
+      
+      // Add event listener
+      isPublicCheckbox.addEventListener('change', toggleJoinApprovalSection);
+      
+      function toggleJoinApprovalSection() {
+        if (isPublicCheckbox.checked) {
+          joinApprovalSection.classList.remove('hidden');
+        } else {
+          joinApprovalSection.classList.add('hidden');
+          // If project is not public, automatically set requires_approval to false
+          // since it doesn't make sense to require approval for a private project
+          requiresApprovalCheckbox.checked = false;
+        }
+      }
+    });
+  </script>
 </x-app-layout>
