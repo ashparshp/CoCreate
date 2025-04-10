@@ -45,7 +45,7 @@
     <header class="bg-white dark:bg-gray-800 shadow-md">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 fade-in">
         <nav class="flex items-center justify-between">
-          <a href="#" class="flex items-center group transition-colors duration-200">
+          <a href="/" class="flex items-center group transition-colors duration-200">
             <img src="{{ asset('cocreate-logo.svg') }}" 
                  class="h-10 w-10 text-blue-600 dark:text-blue-400 transition-colors duration-200 group-hover:text-blue-700 dark:group-hover:text-blue-300" 
                  alt="CoCreate Logo">
@@ -212,16 +212,16 @@
     <footer class="mt-24 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 fade-in" style="animation-delay: 0.6s;">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="flex flex-col md:flex-row items-center justify-between">
-          <div class="flex items-center mb-4 md:mb-0">
-            <svg viewBox="0 0 50 50" class="h-8 w-8 text-blue-600 dark:text-blue-400" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M25 2C12.3 2 2 12.3 2 25s10.3 23 23 23 23-10.3 23-23S37.7 2 25 2zm0 4c10.5 0 19 8.5 19 19s-8.5 19-19 19S6 35.5 6 25 14.5 6 25 6z" />
-              <path d="M35 20H15v-6h20v6zm-16 2h12v12H19V22z" />
-              <path d="M32 30h-4v4h4v-4zm-9-6h-4v4h4v-4z" />
-            </svg>
-            <span class="ml-2 text-sm font-medium text-gray-600 dark:text-gray-400">CoCreate</span>
-          </div>
+        <a href="/" class="flex items-center group transition-colors duration-200">
+          <img src="{{ asset('cocreate-logo.svg') }}"
+               class="h-10 w-10 text-blue-600 dark:text-blue-400 transition-colors duration-200 group-hover:text-blue-700 dark:group-hover:text-blue-300"
+               alt="CoCreate Logo">
+          <h1 class="ml-3 text-xl font-bold text-gray-900 dark:text-white transition-colors duration-200 group-hover:text-blue-700 dark:group-hover:text-blue-300">
+            CoCreate
+          </h1>
+        </a>
           <div class="flex space-x-6">
-            <a href="#" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+            <a href="https://github.com/ashparshp/CoCreate" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
               <span class="sr-only">GitHub</span>
               <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path fill-rule="evenodd" 
