@@ -22,14 +22,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // Create admin user
-        $admin = User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'email_verified_at' => now(),
-            'password' => Hash::make('password'),
-            'remember_token' => Str::random(10),
-        ]);
+        // Seed the static admin user
+        $this->call(\Database\Seeders\AdminUserSeeder::class);
 
         // Create some regular users
         $users = [];

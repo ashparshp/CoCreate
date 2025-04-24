@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
@@ -30,12 +27,8 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        // Prevent errors on SQLite which doesn't support dropping columns easily
         if (Schema::getConnection()->getDriverName() !== 'sqlite') {
             Schema::table('users', function (Blueprint $table) {
                 $table->dropColumn(['role', 'bio', 'profile_photo_path', 'is_active']);
