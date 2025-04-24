@@ -35,6 +35,13 @@
           <x-nav-link :href="route('profile.show')" :active="request()->routeIs('profile.show')" class="px-3 py-2 rounded-md text-sm font-medium transition {{ request()->routeIs('profile.show') ? 'text-indigo-700 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20' : 'text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800' }}">
             Profile
           </x-nav-link>
+          @auth
+              @if (Auth::user()->role === 'admin')
+                  <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')" class="px-3 py-2 rounded-md text-sm font-medium transition {{ request()->routeIs('admin.dashboard') ? 'text-indigo-700 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20' : 'text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800' }}">
+                      Admin Dashboard
+                  </x-nav-link>
+              @endif
+          @endauth
         </div>
       </div>
 
@@ -130,6 +137,13 @@
       <x-responsive-nav-link :href="route('profile.show')" :active="request()->routeIs('profile.show')" class="block pl-3 pr-4 py-2 rounded-md text-base font-medium transition {{ request()->routeIs('profile.show') ? 'text-indigo-700 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20 border-l-4 border-indigo-500 dark:border-indigo-400' : 'text-gray-700 dark:text-gray-300 hover:text-indigo-700 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800 border-l-4 border-transparent' }}">
         Profile
       </x-responsive-nav-link>
+      @auth
+          @if (Auth::user()->role === 'admin')
+              <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')" class="block pl-3 pr-4 py-2 rounded-md text-base font-medium transition {{ request()->routeIs('admin.dashboard') ? 'text-indigo-700 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20 border-l-4 border-indigo-500 dark:border-indigo-400' : 'text-gray-700 dark:text-gray-300 hover:text-indigo-700 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800 border-l-4 border-transparent' }}">
+                  Admin Dashboard
+              </x-responsive-nav-link>
+          @endif
+      @endauth
     </div>
 
     <!-- Mobile User Info & Settings -->

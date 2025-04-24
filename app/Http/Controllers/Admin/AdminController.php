@@ -8,6 +8,8 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\Skill;
 use App\Models\File;
+use App\Models\Message;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -19,6 +21,8 @@ class AdminController extends Controller
         $totalTasks = Task::count();
         $totalSkills = Skill::count();
         $totalFiles = File::count();
+        $totalMessages = Message::count();
+        $totalComments = Comment::count();
         
         $recentUsers = User::latest()->take(5)->get();
         $recentProjects = Project::with('creator')->latest()->take(5)->get();
@@ -36,6 +40,8 @@ class AdminController extends Controller
             'totalTasks', 
             'totalSkills',
             'totalFiles',
+            'totalMessages',
+            'totalComments',
             'recentUsers',
             'recentProjects',
             'projectsByStatus'

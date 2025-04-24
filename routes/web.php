@@ -8,7 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\TaskController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,28 +77,28 @@ Route::middleware(['auth'])->group(function () {
 
 // Admin routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     
     // Users management
-    Route::get('/users', [App\Http\Controllers\Admin\AdminController::class, 'users'])->name('users.index');
-    Route::get('/users/{user}', [App\Http\Controllers\Admin\AdminController::class, 'showUser'])->name('users.show');
-    Route::get('/users/{user}/edit', [App\Http\Controllers\Admin\AdminController::class, 'editUser'])->name('users.edit');
-    Route::put('/users/{user}', [App\Http\Controllers\Admin\AdminController::class, 'updateUser'])->name('users.update');
+    Route::get('/users', [AdminController::class, 'users'])->name('users.index');
+    Route::get('/users/{user}', [AdminController::class, 'showUser'])->name('users.show');
+    Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('users.edit');
+    Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
     
     // Projects management
-    Route::get('/projects', [App\Http\Controllers\Admin\AdminController::class, 'projects'])->name('projects.index');
-    Route::get('/projects/{project}', [App\Http\Controllers\Admin\AdminController::class, 'showProject'])->name('projects.show');
-    Route::delete('/projects/{project}', [App\Http\Controllers\Admin\AdminController::class, 'deleteProject'])->name('projects.destroy');
+    Route::get('/projects', [AdminController::class, 'projects'])->name('projects.index');
+    Route::get('/projects/{project}', [AdminController::class, 'showProject'])->name('projects.show');
+    Route::delete('/projects/{project}', [AdminController::class, 'deleteProject'])->name('projects.destroy');
     
     // Skills management
-    Route::get('/skills', [App\Http\Controllers\Admin\AdminController::class, 'skills'])->name('skills.index');
-    Route::get('/skills/create', [App\Http\Controllers\Admin\AdminController::class, 'createSkill'])->name('skills.create');
-    Route::post('/skills', [App\Http\Controllers\Admin\AdminController::class, 'storeSkill'])->name('skills.store');
-    Route::get('/skills/{skill}/edit', [App\Http\Controllers\Admin\AdminController::class, 'editSkill'])->name('skills.edit');
-    Route::put('/skills/{skill}', [App\Http\Controllers\Admin\AdminController::class, 'updateSkill'])->name('skills.update');
-    Route::delete('/skills/{skill}', [App\Http\Controllers\Admin\AdminController::class, 'deleteSkill'])->name('skills.destroy');
+    Route::get('/skills', [AdminController::class, 'skills'])->name('skills.index');
+    Route::get('/skills/create', [AdminController::class, 'createSkill'])->name('skills.create');
+    Route::post('/skills', [AdminController::class, 'storeSkill'])->name('skills.store');
+    Route::get('/skills/{skill}/edit', [AdminController::class, 'editSkill'])->name('skills.edit');
+    Route::put('/skills/{skill}', [AdminController::class, 'updateSkill'])->name('skills.update');
+    Route::delete('/skills/{skill}', [AdminController::class, 'deleteSkill'])->name('skills.destroy');
     
     // System settings
-    Route::get('/settings', [App\Http\Controllers\Admin\AdminController::class, 'systemSettings'])->name('settings');
-    Route::put('/settings', [App\Http\Controllers\Admin\AdminController::class, 'updateSystemSettings'])->name('settings.update');
+    Route::get('/settings', [AdminController::class, 'systemSettings'])->name('settings');
+    Route::put('/settings', [AdminController::class, 'updateSystemSettings'])->name('settings.update');
 });
