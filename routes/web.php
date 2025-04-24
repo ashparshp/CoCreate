@@ -9,6 +9,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\Admin\AdminController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,30 +76,34 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/projects/{project}/comments/{comment}', [CommentController::class, 'destroy'])->name('projects.comments.destroy');
 });
 
-// Admin routes
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+// Admin routes - Updated to use fully qualified middleware class name
+Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        
+        // Users management
+        Route::get('/users', [AdminController::class, 'users'])->name('users.index');
+        Route::get('/users/{user}', [AdminController::class, 'showUser'])->name('users.show');
+        Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('users.edit');
+        Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
+        
+        // Projects management
+        Route::get('/projects', [AdminController::class, 'projects'])->name('projects.index');
+        Route::get('/projects/{project}', [AdminController::class, 'showProject'])->name('projects.show');
+        Route::delete('/projects/{project}', [AdminController::class, 'deleteProject'])->name('projects.destroy');
+        
+        // Skills management
+        Route::get('/skills', [AdminController::class, 'skills'])->name('skills.index');
+        Route::get('/skills/create', [AdminController::class, 'createSkill'])->name('skills.create');
+        Route::post('/skills', [AdminController::class, 'storeSkill'])->name('skills.store');
+        Route::get('/skills/{skill}/edit', [AdminController::class, 'editSkill'])->name('skills.edit');
+        Route::put('/skills/{skill}', [AdminController::class, 'updateSkill'])->name('skills.update');
+        Route::delete('/skills/{skill}', [AdminController::class, 'deleteSkill'])->name('skills.destroy');
+        
+        // System settings
+        Route::get('/settings', [AdminController::class, 'systemSettings'])->name('settings');
+        Route::put('/settings', [AdminController::class, 'updateSystemSettings'])->name('settings.update');
+    });
     
-    // Users management
-    Route::get('/users', [AdminController::class, 'users'])->name('users.index');
-    Route::get('/users/{user}', [AdminController::class, 'showUser'])->name('users.show');
-    Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('users.edit');
-    Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
-    
-    // Projects management
-    Route::get('/projects', [AdminController::class, 'projects'])->name('projects.index');
-    Route::get('/projects/{project}', [AdminController::class, 'showProject'])->name('projects.show');
-    Route::delete('/projects/{project}', [AdminController::class, 'deleteProject'])->name('projects.destroy');
-    
-    // Skills management
-    Route::get('/skills', [AdminController::class, 'skills'])->name('skills.index');
-    Route::get('/skills/create', [AdminController::class, 'createSkill'])->name('skills.create');
-    Route::post('/skills', [AdminController::class, 'storeSkill'])->name('skills.store');
-    Route::get('/skills/{skill}/edit', [AdminController::class, 'editSkill'])->name('skills.edit');
-    Route::put('/skills/{skill}', [AdminController::class, 'updateSkill'])->name('skills.update');
-    Route::delete('/skills/{skill}', [AdminController::class, 'deleteSkill'])->name('skills.destroy');
-    
-    // System settings
-    Route::get('/settings', [AdminController::class, 'systemSettings'])->name('settings');
-    Route::put('/settings', [AdminController::class, 'updateSystemSettings'])->name('settings.update');
-});
