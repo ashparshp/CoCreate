@@ -1,20 +1,22 @@
-<x-admin-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('User Details') }}
-            </h2>
-            <div class="flex space-x-2">
-                <a href="{{ route('admin.users.index') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-bold py-2 px-4 rounded transition-colors duration-200">
-                    {{ __('Back to Users') }}
-                </a>
-                <a href="{{ route('admin.users.edit', $user) }}" class="bg-blue-500 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
-                    {{ __('Edit User') }}
-                </a>
-            </div>
-        </div>
-    </x-slot>
+@extends('layouts.admin')
 
+@section('header')
+    <div class="flex justify-between items-center">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('User Details') }}
+        </h2>
+        <div class="flex space-x-2">
+            <a href="{{ route('admin.users.index') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-bold py-2 px-4 rounded transition-colors duration-200">
+                {{ __('Back to Users') }}
+            </a>
+            <a href="{{ route('admin.users.edit', $user) }}" class="bg-blue-500 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
+                {{ __('Edit User') }}
+            </a>
+        </div>
+    </div>
+@endsection
+
+@section('content')
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <!-- User Profile Information -->
@@ -94,7 +96,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- User Skills -->
             <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                 <div class="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -311,6 +312,6 @@
                     </div>
                 </div>
             @endif
-        </div>
+         </div>
     </div>
-</x-admin-layout>
+@endsection

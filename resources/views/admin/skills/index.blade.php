@@ -1,15 +1,17 @@
-<x-admin-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Manage Skills') }}
-            </h2>
-            <a href="{{ route('admin.skills.create') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-200">
-                {{ __('Add New Skill') }}
-            </a>
-        </div>
-    </x-slot>
+@extends('layouts.admin')
 
+@section('header')
+    <div class="flex justify-between items-center">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Manage Skills') }}
+        </h2>
+        <a href="{{ route('admin.skills.create') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-200">
+            {{ __('Add New Skill') }}
+        </a>
+    </div>
+@endsection
+
+@section('content')
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700">
@@ -141,4 +143,4 @@
             categoryFilter.addEventListener('change', filterSkills);
         });
     </script>
-</x-admin-layout>
+@endsection
