@@ -168,3 +168,54 @@ Then paste this code:
 ---
 
 You’re now ready to use the CoCreate application.
+
+
+---
+
+## Running with Docker (Alternative Method)
+
+If you prefer using Docker, follow these steps:
+
+### 1. Build and Run the App
+
+```bash
+docker compose up --build
+```
+
+This will:
+- Build the Docker image
+- Install PHP and Node dependencies
+- Run Laravel on port 8000
+
+Visit the app at: [http://localhost:8000](http://localhost:8000)
+
+### 2. Create SQLite Database File
+
+If not already done, create the SQLite file:
+
+```bash
+touch database/database.sqlite
+```
+
+### 3. Create Admin User (Optional)
+
+To create a default admin user inside the container:
+
+```bash
+docker compose exec app php artisan tinker
+```
+
+Then paste:
+
+```php
+\App\Models\User::updateOrCreate(
+    ['email' => 'admin@cocreate.com'],
+    [
+        'name' => 'Administrator',
+        'password' => \Illuminate\Support\Facades\Hash::make('cocreate@admin'),
+        'role' => 'admin',
+        'is_active' => true,
+        'email_verified_at' => now(),
+    ]
+);
+```
