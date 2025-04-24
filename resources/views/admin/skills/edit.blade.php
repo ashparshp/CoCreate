@@ -1,15 +1,17 @@
-<x-admin-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Edit Skill') }}
-            </h2>
-            <a href="{{ route('admin.skills.index') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-bold py-2 px-4 rounded transition-colors duration-200">
-                {{ __('Back to Skills') }}
-            </a>
-        </div>
-    </x-slot>
+@extends('layouts.admin')
 
+@section('header')
+    <div class="flex justify-between items-center">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Edit Skill') }}
+        </h2>
+        <a href="{{ route('admin.skills.index') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-bold py-2 px-4 rounded transition-colors duration-200">
+            {{ __('Back to Skills') }}
+        </a>
+    </div>
+@endsection
+
+@section('content')
     <div class="py-12">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700">
@@ -68,20 +70,26 @@
                     </div>
                     
                     <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-700 flex justify-between">
-                        <form action="{{ route('admin.skills.destroy', $skill) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this skill? This will remove it from all user profiles.');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                        <div>
+                            <!-- Delete button moved outside the form but visually appears in the same position -->
+                            <a href="#" onclick="event.preventDefault(); document.getElementById('delete-skill-form').submit();" 
+                               class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
                                 {{ __('Delete Skill') }}
-                            </button>
-                        </form>
+                            </a>
+                        </div>
                         
                         <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
                             {{ __('Update Skill') }}
                         </button>
                     </div>
                 </form>
+                
+                <!-- Separate delete form outside the update form -->
+                <form id="delete-skill-form" action="{{ route('admin.skills.destroy', $skill) }}" method="POST" class="hidden">
+                    @csrf
+                    @method('DELETE')
+                </form>
             </div>
         </div>
     </div>
-</x-admin-layout>
+@endsection
