@@ -20,7 +20,7 @@
     <body class="font-sans antialiased h-full text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-900">
         <div class="min-h-screen flex flex-col">
             <!-- Admin Top Navbar -->
-            <nav class="bg-indigo-600 dark:bg-indigo-800 text-white shadow-lg">
+            <nav class="bg-indigo-600 dark:bg-indigo-800 text-white shadow-lg" x-data="{ mobileMenuOpen: false }">
                 <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
                     <div class="relative flex items-center justify-between h-16">
                         <!-- Logo and Menu -->
@@ -75,8 +75,8 @@
                         </div>
                         
                         <!-- Mobile menu button -->
-                        <div class="md:hidden -mr-2 flex">
-                            <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-white hover:bg-indigo-500 dark:hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white transition-colors duration-200" x-data="{ mobileMenuOpen: false }" aria-controls="mobile-menu" aria-expanded="false">
+                        <div class="md:hidden flex">
+                            <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-white hover:bg-indigo-500 dark:hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white transition-colors duration-200" aria-controls="mobile-menu" aria-expanded="false">
                                 <span class="sr-only">Open main menu</span>
                                 <svg x-show="!mobileMenuOpen" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -90,7 +90,7 @@
                 </div>
 
                 <!-- Mobile menu -->
-                <div class="md:hidden" id="mobile-menu" x-data="{ mobileMenuOpen: false }" x-show="mobileMenuOpen" style="display: none;">
+                <div class="md:hidden" id="mobile-menu" x-show="mobileMenuOpen" style="display: none;">
                     <div class="px-2 pt-2 pb-3 space-y-1">
                         <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'bg-indigo-700 dark:bg-indigo-900' : 'hover:bg-indigo-500 dark:hover:bg-indigo-700' }} block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200">Dashboard</a>
                         <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'bg-indigo-700 dark:bg-indigo-900' : 'hover:bg-indigo-500 dark:hover:bg-indigo-700' }} block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200">Users</a>
@@ -101,6 +101,7 @@
                 </div>
             </nav>
 
+            <!-- Rest of the page content remains unchanged -->
             <!-- Page Header -->
             @hasSection('header')
                 <header class="bg-white dark:bg-gray-800 shadow">

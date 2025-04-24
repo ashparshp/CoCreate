@@ -8,23 +8,19 @@ Alpine.start();
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-// Dark mode initialization
 document.addEventListener('DOMContentLoaded', function() {
     initializeDarkMode();
     
-    // File preview functionality
     const fileInput = document.getElementById('file');
     if (fileInput) {
         fileInput.addEventListener('change', previewFile);
     }
     
-    // Message container auto-scroll
     const messageContainer = document.getElementById('message-container');
     if (messageContainer) {
         messageContainer.scrollTop = messageContainer.scrollHeight;
     }
     
-    // Ctrl+Enter to submit forms
     const messageInput = document.getElementById('message-input');
     const messageForm = document.getElementById('message-form');
     if (messageInput && messageForm) {
@@ -36,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Task filters
     setupTaskFilters();
 });
 
@@ -102,7 +97,6 @@ function setupTaskFilters() {
         searchInput.addEventListener('input', applyFileFilters);
     }
     
-    // Initial filter application
     if (statusFilter && priorityFilter && assignedFilter) {
         applyFilters();
     }
@@ -119,7 +113,6 @@ function applyFilters() {
     const searchInput = document.getElementById('search');
     const searchValue = searchInput ? searchInput.value.toLowerCase() : '';
     
-    // Filter cards in kanban view
     document.querySelectorAll('.task-card').forEach(card => {
         const cardTitle = card.querySelector('a').textContent.toLowerCase();
         const cardDesc = card.querySelector('p') ? card.querySelector('p').textContent.toLowerCase() : '';
@@ -135,7 +128,6 @@ function applyFilters() {
         card.style.display = statusMatch && priorityMatch && assignedMatch && searchMatch ? 'block' : 'none';
     });
     
-    // Filter rows in list view
     document.querySelectorAll('.task-row').forEach(row => {
         const rowTitle = row.querySelector('a').textContent.toLowerCase();
         const rowStatus = row.dataset.status;
@@ -150,7 +142,6 @@ function applyFilters() {
         row.style.display = statusMatch && priorityMatch && assignedMatch && searchMatch ? '' : 'none';
     });
     
-    // Show/hide empty state messages in kanban view
     document.querySelectorAll('.task-column').forEach(column => {
         const hasVisibleCards = Array.from(column.querySelectorAll('.task-card')).some(card => card.style.display !== 'none');
         const emptyStateMsg = column.querySelector('.empty-state');
@@ -182,15 +173,11 @@ function applyFileFilters() {
         item.style.display = matchesSearch && matchesType ? '' : 'none';
     });
     
-    // Check if there are any visible items
     const hasVisibleItems = Array.from(fileItems).some(item => item.style.display !== 'none');
     
-    // Get the parent table element
     const fileList = document.getElementById('file-list');
     
-    // If no visible items and parent exists, add "no results" message
     if (!hasVisibleItems && fileList) {
-        // Check if the message already exists
         let noResultsMsg = document.getElementById('no-results-message');
         
         if (!noResultsMsg) {
@@ -204,7 +191,6 @@ function applyFileFilters() {
             fileList.appendChild(noResultsMsg);
         }
     } else {
-        // Remove the message if it exists
         const noResultsMsg = document.getElementById('no-results-message');
         if (noResultsMsg) {
             noResultsMsg.remove();
@@ -212,6 +198,5 @@ function applyFileFilters() {
     }
 }
 
-// Expose functions to global scope
 window.toggleDarkMode = toggleDarkMode;
 window.previewFile = previewFile;
