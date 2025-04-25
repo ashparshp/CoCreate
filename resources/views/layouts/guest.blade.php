@@ -26,7 +26,7 @@
       }
     </script>
   </head>
-  <body class="font-sans antialiased h-full bg-gradient-to-br from-orange-100 to-pink-200 dark:bg-gradient-to-br dark:from-indigo-900 dark:to-purple-900">
+  <body class="font-sans antialiased h-full bg-gradient-to-br from-orange-100 to-pink-200 dark:bg-gradient-to-br dark:from-gray-600 dark:to-gray-900">
     <div class="min-h-screen flex flex-col items-center justify-center py-8">
       <div>
         <a href="/" class="flex items-center group transition-colors duration-200">
