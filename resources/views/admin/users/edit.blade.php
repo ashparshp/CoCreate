@@ -79,9 +79,11 @@
                         </div>
 
                         <!-- Active Status -->
-                        <div class="mb-4">
+                        <div x-data="{ isActive: {{ old('is_active', $user->is_active) ? 'true' : 'false' }} }" class="mb-4">
                             <div class="flex items-center">
-                                <input type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', $user->is_active) ? 'checked' : '' }}
+                                <input type="checkbox" name="is_active" id="is_active" value="1" 
+                                       {{ old('is_active', $user->is_active) ? 'checked' : '' }}
+                                       x-model="isActive"
                                        class="rounded border-gray-300 dark:border-gray-700 text-indigo-600 dark:text-indigo-500 shadow-sm focus:border-indigo-300 dark:focus:border-indigo-400 focus:ring focus:ring-indigo-200 dark:focus:ring-indigo-600 focus:ring-opacity-50 transition-colors duration-200">
                                 <label for="is_active" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                                     {{ __('Active Account') }}
@@ -93,6 +95,16 @@
                             @error('is_active')
                                 <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
+                            
+                            <!-- Deactivation Reason (shown only when deactivating) -->
+                            <div x-show="!isActive" class="mt-3 bg-gray-50 dark:bg-gray-700 p-3 rounded-md border border-gray-200 dark:border-gray-600">
+                                <label for="deactivation_reason" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    {{ __('Deactivation Reason') }} <span class="text-xs text-gray-500">({{ __('Will be sent to the user') }})</span>
+                                </label>
+                                <textarea name="deactivation_reason" id="deactivation_reason" rows="3"
+                                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring focus:ring-indigo-500 dark:focus:ring-indigo-400 transition-colors duration-200"
+                                        placeholder="{{ __('Provide a reason why this account is being deactivated...') }}"></textarea>
+                            </div>
                         </div>
                     </div>
                     

@@ -20,12 +20,17 @@ class AdminMiddleware
 
         $user = Auth::user();
         
-        if (!$user || $user->role !== 'admin') {
-            return redirect()->route('dashboard')->with('error', 'Access denied. Admin privileges required.');
+        // Check for active status first
+        if (!$user->is_active) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect()->route('login')->with('error', 'Your account has been deactivated. Please contact the administrator for more information.');
         }
-
-        if (isset($user->is_active) && !$user->is_active) {
-            return redirect()->route('login')->with('error', 'Account is inactive');
+        
+        // Then check for admin role
+        if ($user->role !== 'admin') {
+            return redirect()->route('dashboard')->with('error', 'Access denied. Admin privileges required.');
         }
 
         return $next($request);
