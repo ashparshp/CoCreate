@@ -51,7 +51,7 @@
                                     <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'bg-indigo-800 dark:bg-indigo-950' : 'hover:bg-indigo-600 dark:hover:bg-indigo-800' }} px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">Users</a>
                                     <a href="{{ route('admin.projects.index') }}" class="{{ request()->routeIs('admin.projects.*') ? 'bg-indigo-800 dark:bg-indigo-950' : 'hover:bg-indigo-600 dark:hover:bg-indigo-800' }} px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">Projects</a>
                                     <a href="{{ route('admin.skills.index') }}" class="{{ request()->routeIs('admin.skills.*') ? 'bg-indigo-800 dark:bg-indigo-950' : 'hover:bg-indigo-600 dark:hover:bg-indigo-800' }} px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">Skills</a>
-                                    <a href="{{ route('admin.settings') }}" class="{{ request()->routeIs('admin.settings') ? 'bg-indigo-800 dark:bg-indigo-950' : 'hover:bg-indigo-600 dark:hover:bg-indigo-800' }} px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">Settings</a>
+                                    <!-- <a href="{{ route('admin.settings') }}" class="{{ request()->routeIs('admin.settings') ? 'bg-indigo-800 dark:bg-indigo-950' : 'hover:bg-indigo-600 dark:hover:bg-indigo-800' }} px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">Settings</a> -->
                                 </div>
                             </div>
                         </div>
