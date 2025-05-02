@@ -10,6 +10,7 @@ use App\Models\Skill;
 use App\Models\File;
 use App\Models\Message;
 use App\Models\Comment;
+use App\Notifications\AccountStatusNotification; 
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -64,7 +65,7 @@ class AdminController extends Controller
     {
         return view('admin.users.edit', compact('user'));
     }
-    
+
     public function updateUser(Request $request, User $user)
     {
         $request->validate([
@@ -72,13 +73,39 @@ class AdminController extends Controller
             'email' => 'required|email|unique:users,email,' . $user->id,
             'role' => 'required|in:user,admin',
             'bio' => 'nullable|string|max:1000',
-            'is_active' => 'boolean',
+            'deactivation_reason' => 'nullable|string|max:1000',
         ]);
         
-        $user->update($request->all());
+        // Check if the active status is changing
+        $wasActive = $user->is_active;
+        $willBeActive = $request->has('is_active');
+        $statusChanged = $wasActive != $willBeActive;
+        
+        // Prepare data array for update
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role,
+            'bio' => $request->bio,
+            'is_active' => $willBeActive ? 1 : 0, // Explicitly set to 1 or 0, not empty string
+        ];
+        
+        $user->update($data);
+        
+        // If status changed, notify the user
+        if ($statusChanged) {
+            try {
+                $reason = $willBeActive ? null : $request->deactivation_reason;
+                $user->notify(new AccountStatusNotification($willBeActive, $reason));
+            } catch (\Exception $e) {
+                // Log the error but continue
+                \Log::error('Failed to send account status notification: ' . $e->getMessage());
+            }
+        }
         
         return redirect()->route('admin.users.show', $user)
-            ->with('success', 'User updated successfully.');
+            ->with('success', 'User updated successfully' . 
+                   ($statusChanged ? ($willBeActive ? ' and activated.' : ' and deactivated.') : '.'));
     }
     
     public function projects()

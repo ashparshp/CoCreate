@@ -5,6 +5,14 @@
   
   <!-- Session Status -->
   <x-auth-session-status class="mb-4" :status="session('status')" />
+  
+  <!-- Error Messages - Enhanced to style the inactive account error -->
+  @if(session('error'))
+    <div class="mb-4 text-sm font-medium rounded-md p-4 
+      {{ str_contains(session('error'), 'deactivated') ? 'text-red-700 bg-red-100 dark:text-red-300 dark:bg-red-900/30 border border-red-200 dark:border-red-800' : 'text-red-600 dark:text-red-400' }}">
+      {{ session('error') }}
+    </div>
+  @endif
 
   <form method="POST" action="{{ route('login') }}">
     @csrf

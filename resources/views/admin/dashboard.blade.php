@@ -143,14 +143,29 @@
                 </div>
                 <div class="p-5">
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                        @foreach($recentUsers as $user)
-                            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 text-center">
-                                <div class="mx-auto h-16 w-16 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-700 dark:text-indigo-300 text-xl font-bold">
+                        @foreach($recentUsers as $key => $user)
+                            @php
+                                $colors = [
+                                    // Light mode gradient, avatar bg, text color, link color
+                                    ['bg-gradient-to-br from-cyan-50 to-blue-100 dark:bg-gradient-to-br dark:from-blue-800 dark:to-cyan-900', 'bg-cyan-200 dark:bg-blue-600', 'text-cyan-700 dark:text-blue-200', 'text-cyan-600 dark:text-blue-300 hover:text-cyan-800 dark:hover:text-blue-100'],
+                                    
+                                    ['bg-gradient-to-br from-purple-50 to-fuchsia-100 dark:bg-gradient-to-br dark:from-purple-800 dark:to-fuchsia-900', 'bg-purple-200 dark:bg-purple-600', 'text-purple-700 dark:text-purple-200', 'text-purple-600 dark:text-purple-300 hover:text-purple-800 dark:hover:text-purple-100'],
+                                    
+                                    ['bg-gradient-to-br from-emerald-50 to-teal-100 dark:bg-gradient-to-br dark:from-teal-800 dark:to-emerald-900', 'bg-emerald-200 dark:bg-emerald-600', 'text-emerald-700 dark:text-emerald-200', 'text-emerald-600 dark:text-emerald-300 hover:text-emerald-800 dark:hover:text-emerald-100'],
+                                    
+                                    ['bg-gradient-to-br from-amber-50 to-orange-100 dark:bg-gradient-to-br dark:from-amber-800 dark:to-orange-900', 'bg-amber-200 dark:bg-amber-600', 'text-amber-700 dark:text-amber-200', 'text-amber-600 dark:text-amber-300 hover:text-amber-800 dark:hover:text-amber-100'],
+                                    
+                                    ['bg-gradient-to-br from-rose-50 to-pink-100 dark:bg-gradient-to-br dark:from-pink-800 dark:to-rose-900', 'bg-rose-200 dark:bg-rose-600', 'text-rose-700 dark:text-pink-200', 'text-rose-600 dark:text-pink-300 hover:text-rose-800 dark:hover:text-pink-100'],
+                                ];
+                                $colorSet = $colors[$key % count($colors)];
+                            @endphp
+                            <div class="{{ $colorSet[0] }} rounded-lg p-4 text-center shadow hover:shadow-md transition-all duration-300 transform hover:scale-105 dark:border dark:border-gray-700">
+                                <div class="mx-auto h-16 w-16 rounded-full {{ $colorSet[1] }} flex items-center justify-center {{ $colorSet[2] }} text-xl font-bold shadow-sm">
                                     {{ substr($user->name, 0, 1) }}
                                 </div>
-                                <h4 class="mt-2 font-medium text-gray-900 dark:text-white truncate">{{ $user->name }}</h4>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Joined {{ $user->created_at->diffForHumans() }}</p>
-                                <a href="{{ route('admin.users.show', $user) }}" class="mt-2 inline-block text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors duration-200">
+                                <h4 class="mt-2 font-medium text-gray-900 dark:text-gray-100 truncate">{{ $user->name }}</h4>
+                                <p class="text-xs text-gray-600 dark:text-gray-300">Joined {{ $user->created_at->diffForHumans() }}</p>
+                                <a href="{{ route('admin.users.show', $user) }}" class="mt-2 inline-block text-xs {{ $colorSet[3] }} transition-colors duration-200">
                                     View Profile
                                 </a>
                             </div>
@@ -162,7 +177,7 @@
             <!-- Quick Links -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
                 <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-700">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Admin Quick Links</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Quick Links</h3>
                 </div>
                 <div class="p-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                     <a href="{{ route('admin.users.index') }}" class="bg-gradient-to-r from-indigo-600 to-indigo-800 hover:from-indigo-700 hover:to-indigo-900 text-white rounded-lg p-4 shadow-md transition-all duration-300 hover:shadow-lg transform hover:scale-105">
@@ -171,7 +186,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
                             <div>
-                                <h4 class="font-semibold">Manage Users</h4>
+                                <h4 class="font-semibold text-indigo-100">Manage Users</h4>
                                 <p class="text-xs text-indigo-100">View, edit and manage users</p>
                             </div>
                         </div>
@@ -183,7 +198,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
                             </svg>
                             <div>
-                                <h4 class="font-semibold">Manage Projects</h4>
+                                <h4 class="font-semibold text-indigo-100">Manage Projects</h4>
                                 <p class="text-xs text-purple-100">Monitor and control projects</p>
                             </div>
                         </div>
@@ -195,7 +210,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                             </svg>
                             <div>
-                                <h4 class="font-semibold">Manage Skills</h4>
+                                <h4 class="font-semibold text-indigo-100">Manage Skills</h4>
                                 <p class="text-xs text-blue-100">Add, edit or remove skills</p>
                             </div>
                         </div>
@@ -208,7 +223,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
                             <div>
-                                <h4 class="font-semibold">System Settings</h4>
+                                <h4 class="font-semibold text-indigo-100">System Settings</h4>
                                 <p class="text-xs text-gray-300">Configure application settings</p>
                             </div>
                         </div>

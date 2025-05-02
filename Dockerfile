@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     nodejs \
     npm \
     sqlite3 \
-    && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl bcmath
+    && docker-php-ext-install pdo pdo_sqlite mbstring zip bcmath
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -22,17 +22,20 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# Copy app files
+# Copy application source
 COPY . .
 
-# Install dependencies
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader \
+# Ensure SQLite DB exists
+RUN mkdir -p database && touch database/database.sqlite
+
+# Install PHP and Node dependencies
+RUN composer install --no-interaction --optimize-autoloader --no-dev \
     && npm install \
     && npm run build \
     && php artisan config:cache
 
-# Expose port Laravel will run on
+# Expose port
 EXPOSE 8000
 
 # Start Laravel
-CMD php artisan serve --host=0.0.0.0 --port=8000
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
